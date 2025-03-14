@@ -29,6 +29,9 @@ app.use((req, res, next) => {
 // app.use(morgan('dev'));
 connectDatabase();
 
+app.use('/',(req,res)=>{
+    res.status(200).json({message:"welcome"})
+})
 // Path For Set Product Images
 let imagePath = path.join(__dirname, 'public', 'images')
 app.use('/public/images', express.static(imagePath));
