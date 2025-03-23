@@ -29,8 +29,6 @@ const FileUpload = () => {
             }
 
             const { data: url } = await supabase.storage.from("E-Commerce").getPublicUrl(filePath);
-
-            console.log(url.publicUrl);
             setFileURL(url.publicUrl);
             alert("File Upload Successfully.");
         } catch (error) {

@@ -428,6 +428,8 @@ const products = [
         },
         "rating": 5
     },
+    
+    // Flours 
     {
         "image": "/Images/Flours/Sher_Besan_40lb.png",
         "name": "Sher Besan",
@@ -510,18 +512,6 @@ const products = [
         "rating": 5
     },
     {
-        "image": "/Images/Rice/IC_1121_Basmati_Long_Grain_Steam_Rice_10lbs_(Pink).png",
-        "name": "IC 1121 Basmati Long Grain Creamy Sella Rice",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-        "category": "Rice",
-        "price_per_lb": 1.25,
-        "sizes": {
-            "40LB": 50.00,
-            "10LB": 13.00,
-        },
-        "rating": 5
-    },
-    {
         "image": "/Images/Rice/IC_Rozana_Basmati_10lbs.png",
         "name": "IC Rozana Basmati",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -530,6 +520,19 @@ const products = [
         "sizes": {
             "40LB": 44.00,
             "10LB": 11.00,
+        },
+        "rating": 5
+    },
+    //NOT STROE
+    {
+        "image": "/Images/Rice/IC_1121_Basmati_Long_Grain_Steam_Rice_10lbs_(Pink).png",
+        "name": "IC 1121 Basmati Long Grain Creamy Sella Rice",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+        "category": "Rice",
+        "price_per_lb": 1.25,
+        "sizes": {
+            "40LB": 50.00,
+            "10LB": 13.00,
         },
         "rating": 5
     },
@@ -555,6 +558,8 @@ const products = [
         },
         "rating": 5
     },
+    
+
     {
         "image": "/Images/Spices/Bay_Leaves.png",
         "name": "Bay Leaves",
@@ -973,7 +978,7 @@ const products = [
         },
         "rating": 5
     },
-    {
+    { 
         "image": "/Images/Spices/Kasoori_Methi.png",
         "name": "Kasoori Methi (2.2kg)",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",

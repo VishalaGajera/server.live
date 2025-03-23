@@ -53,7 +53,6 @@ app.post('/api/contact', async (req, res) => {
             Message: ${message}`;
 
         const Info = await SendMailToApplicient(from, Subject, text);
-        console.log("Info.success:", Info.success);
         if (!Info.success) {
             res.status(200).json({ message: Info.message});
         }
