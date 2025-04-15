@@ -4,6 +4,7 @@ const connectDatabase = async () => {
   try {
     // await mongoose.connect("mongodb+srv://vishalagajera:r7WDhUhDDLqaoFP1@cluster0.rqw5i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
     await mongoose.connect("mongodb+srv://vishalagajera:r7WDhUhDDLqaoFP1@cluster0.rqw5i.mongodb.net/ECommerce?retryWrites=true&w=majority");
+    // await mongoose.connect("mongodb://localhost:27017/e-commerce");
     console.log("MongoDB Connected");
   } catch (error) {
     console.error("Database connection failed:", error);

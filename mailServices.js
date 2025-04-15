@@ -3,18 +3,19 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'info@cctraders.ca',
-        pass: 'nrtg wymr clkh frtm'
+        user: 'vishalagajera@gmail.com',
+        pass: 'aiwzyftarolruzpp'
     }
 });
 
-const SendMailToApplicient = async (from, Subject, text) => {
+const SendMailToApplicient = async (from, Subject, html) => {
     try {
         const MailOption = {
             from,
             to:"info@cctraders.ca",
+            // to:"vishalagajera@gmail.com",
             subject:Subject,
-            text
+            html:html
         };
         const info = await transporter.sendMail(MailOption);
         return { success: true, message: 'Email sent successfully' };
