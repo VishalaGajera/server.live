@@ -12,6 +12,7 @@ const Contact = require("./Models/ConatctSchema.js");
 const ProductRouter = require("./Routes/ProductRoutes.js");
 const CategoryRouter = require("./Routes/CategoryRoutes.js");
 const Product = require("./Models/ProductSchema.js");
+const authRouter = require("./Routes/auth.js");
 
 app.use(express.json());
 app.use(cors());
@@ -24,7 +25,7 @@ let imagePath = path.join(__dirname, "public", "images");
 app.use("/public/images", express.static(imagePath));
 app.use("/api/product", ProductRouter);
 app.use("/api/category", CategoryRouter);
-
+app.use("/api/auth", authRouter);
 // Send email
 // const mailOptions = {
 //     from: email,
@@ -124,6 +125,6 @@ app.put("/api/updateProductCategory", async (req, res) => {
   }
 });
 
-app.listen(port, () => console.log(`Server ready on port ${port}.`));
+app.listen(4000, () => console.log(`Server ready on port ${4000}.`));
 
 module.exports = app;
