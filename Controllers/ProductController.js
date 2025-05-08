@@ -380,3 +380,46 @@ exports.editAllProduct = async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 };
+
+exports.addCartProduct = async (req, res) => {
+  const { userId, productId, size, quantity } = req.body;
+
+  try {
+    let cart = await Cart.findOne({ userId });
+
+    if (!cart) {
+      cart = new Cart({ userId, items: [] });
+    }
+
+    const itemIndex = cart.items.findIndex(
+      (item) => item.productId === productId && item.size === size
+    );
+
+    if (itemIndex > -1) {
+      cart.items[itemIndex].quantity += quantity;
+    } else {
+      cart.items.push({ productId, size, quantity });
+    }
+
+    await cart.save();
+    res.status(200).json({ success: true, cart });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.fetchCartProduct = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ userId: req.params.userId }).populate(
+      "items.productId"
+    );
+    if (!cart)
+      return res
+        .status(404)
+        .json({ success: false, message: "Cart not found" });
+
+    res.status(200).json({ success: true, cart });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};

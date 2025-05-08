@@ -10,5 +10,3 @@ CategoryRouter.put("/updateData/:id", categoryController.editCategory);
 CategoryRouter.delete("/deleteData/:id", categoryController.deleteCategory);
 
 module.exports = CategoryRouter;
-
-
