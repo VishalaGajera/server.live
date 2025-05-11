@@ -13,7 +13,8 @@ const ProductRouter = require("./Routes/ProductRoutes.js");
 const CategoryRouter = require("./Routes/CategoryRoutes.js");
 const CartRouter = require("./Routes/CartProductRoutes.js");
 const Product = require("./Models/ProductSchema.js");
-const authRouter = require("./Routes/auth.js");
+const AuthRouter = require("./Routes/auth.js");
+const UserRouter = require("./Routes/UserRoute.js");
 
 app.use(express.json());
 app.use(cors());
@@ -26,7 +27,8 @@ let imagePath = path.join(__dirname, "public", "images");
 app.use("/public/images", express.static(imagePath));
 app.use("/api/product", ProductRouter);
 app.use("/api/category", CategoryRouter);
-app.use("/api/auth", authRouter);
+app.use("/api/auth", AuthRouter);
+app.use("/api/user", UserRouter);
 app.use("/api/cart", CartRouter);
 
 app.post("/api/contact", async (req, res) => {
@@ -118,6 +120,6 @@ app.put("/api/updateProductCategory", async (req, res) => {
   }
 });
 
-app.listen(4000, () => console.log(`Server ready on port ${4000}.`));
+app.listen(port, () => console.log(`Server ready on port ${port}.`));
 
 module.exports = app;
