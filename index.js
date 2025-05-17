@@ -17,7 +17,11 @@ const AuthRouter = require("./Routes/auth.js");
 const UserRouter = require("./Routes/UserRoute.js");
 
 app.use(express.json());
-app.use(cors());
+
+app.use(cors({
+  origin: "http://localhost:5173", 
+  credentials: true,
+}));
 
 // app.use(morgan('dev'));
 connectDatabase();
