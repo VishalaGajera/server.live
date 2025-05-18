@@ -15,25 +15,26 @@ const CartRouter = require("./Routes/CartProductRoutes.js");
 const Product = require("./Models/ProductSchema.js");
 const AuthRouter = require("./Routes/auth.js");
 const UserRouter = require("./Routes/UserRoute.js");
+const authMiddleware = require("./middleware/auth.middleware.js");
 
 app.use(express.json());
 
-app.use(cors({
-  origin: "http://localhost:5173", 
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-// app.use(morgan('dev'));
 connectDatabase();
 
-// Path For Set Product Images
 let imagePath = path.join(__dirname, "public", "images");
 app.use("/public/images", express.static(imagePath));
-app.use("/api/product", ProductRouter);
-app.use("/api/category", CategoryRouter);
+app.use("/api/product", authMiddleware, ProductRouter);
+app.use("/api/category", authMiddleware, CategoryRouter);
 app.use("/api/auth", AuthRouter);
-app.use("/api/user", UserRouter);
-app.use("/api/cart", CartRouter);
+app.use("/api/user", authMiddleware, UserRouter);
+app.use("/api/cart", authMiddleware, CartRouter);
 
 app.post("/api/contact", async (req, res) => {
   const { firstName, lastName, subject, message, email } = req.body;
