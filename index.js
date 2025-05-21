@@ -30,11 +30,11 @@ connectDatabase();
 
 let imagePath = path.join(__dirname, "public", "images");
 app.use("/public/images", express.static(imagePath));
-app.use("/api/product", authMiddleware, ProductRouter);
-app.use("/api/category", authMiddleware, CategoryRouter);
+app.use("/api/product", ProductRouter);
+app.use("/api/category", CategoryRouter);
 app.use("/api/auth", AuthRouter);
-app.use("/api/user", authMiddleware, UserRouter);
-app.use("/api/cart", authMiddleware, CartRouter);
+app.use("/api/user", UserRouter);
+app.use("/api/cart", CartRouter);
 
 app.post("/api/contact", async (req, res) => {
   const { firstName, lastName, subject, message, email } = req.body;
