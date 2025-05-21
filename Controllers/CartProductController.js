@@ -25,7 +25,7 @@ exports.addCartProduct = async (req, res) => {
     const newCartItem = new Cart({ userId, productId, size, quantity, price });
     await newCartItem.save();
 
-    res.status(201).json({ success: true, cartItem: newCartItem });
+    res.status(201).json({ success: true, message: "Cart item added successfully", cartItem: newCartItem });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -33,9 +33,7 @@ exports.addCartProduct = async (req, res) => {
 
 exports.fetchCartProduct = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.params.userId }).populate(
-      "items.productId"
-    );
+    const cart = await Cart.find({ userId: req.params.userId });
     if (!cart)
       return res
         .status(404)
@@ -51,7 +49,7 @@ exports.updateCartProduct = async (req, res) => {
   const { userId, productId, size, quantity } = req.body;
 
   try {
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findById(req.params.id);
     if (!cart)
       return res
         .status(404)

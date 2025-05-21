@@ -160,7 +160,7 @@
 
 const path = require("path");
 const mongoose = require("mongoose");
-const Product = require("../Models/ProductSchema");
+const Product = require("../Models/ProductModel");
 
 exports.addProduct = async (req, res) => {
   try {
