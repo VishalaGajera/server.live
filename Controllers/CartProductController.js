@@ -25,7 +25,11 @@ exports.addCartProduct = async (req, res) => {
     const newCartItem = new Cart({ userId, productId, size, quantity, price });
     await newCartItem.save();
 
-    res.status(201).json({ success: true, message: "Cart item added successfully", cartItem: newCartItem });
+    res.status(201).json({
+      success: true,
+      message: "Cart item added successfully",
+      cartItem: newCartItem,
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -49,25 +53,21 @@ exports.updateCartProduct = async (req, res) => {
   const { userId, productId, size, quantity } = req.body;
 
   try {
-    const cart = await Cart.findById(req.params.id);
+    const cart = await Cart.findOne({
+      _id: req.params.id,
+      productId: productId,
+      size,
+    });
     if (!cart)
       return res
         .status(404)
         .json({ success: false, message: "Cart not found" });
 
-    const itemIndex = cart.items.findIndex(
-      (item) => item.productId === productId && item.size === size
-    );
+    cart.quantity = quantity;
 
-    if (itemIndex > -1) {
-      cart.items[itemIndex].quantity = quantity;
-      await cart.save();
-      return res.status(200).json({ success: true, cart });
-    }
+    await cart.save();
 
-    return res
-      .status(404)
-      .json({ success: false, message: "Item not found in cart" });
+    return res.status(200).json({ success: true, cart });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

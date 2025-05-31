@@ -22,7 +22,8 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://cctraders.ca",
-  "https://cctraders-admin.vercel.app"
+  "https://cctraders-admin.vercel.app",
+  "https://e-commerce-ten-ebon-93.vercel.app/",
 ];
 
 app.use(

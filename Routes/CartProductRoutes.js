@@ -8,7 +8,7 @@ CartProductRouter.get(
   "/fetchCartProduct/:userId",
   cartProductController.fetchCartProduct
 );
-CartProductRouter.put(
+CartProductRouter.patch(
   "/updateData/:id",
   cartProductController.updateCartProduct
 );
