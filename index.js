@@ -14,6 +14,7 @@ const CategoryRouter = require("./Routes/CategoryRoutes.js");
 const CartRouter = require("./Routes/CartProductRoutes.js");
 const Product = require("./Models/ProductModel.js");
 const AuthRouter = require("./Routes/auth.js");
+const OrderRouter = require("./Routes/orderRoutes.js");
 const UserRouter = require("./Routes/UserRoute.js");
 const authMiddleware = require("./middleware/auth.middleware.js");
 
@@ -26,18 +27,20 @@ const allowedOrigins = [
   "https://e-commerce-ten-ebon-93.vercel.app",
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
+
+app.use(cors())
 
 connectDatabase();
 
@@ -46,6 +49,7 @@ app.use("/public/images", express.static(imagePath));
 app.use("/api/product", ProductRouter);
 app.use("/api/category", CategoryRouter);
 app.use("/api/auth", AuthRouter);
+app.use("/api/order", OrderRouter);
 app.use("/api/user", UserRouter);
 app.use("/api/cart", CartRouter);
 
