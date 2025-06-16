@@ -3,9 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const mongoose = require("mongoose");
 const port = process.env.PORT;
-// const morgan = require('morgan');
 const path = require("path");
 const { SendMailToApplicient } = require("./mailServices.js");
 const Contact = require("./Models/ConatctModel.js");
@@ -13,8 +11,8 @@ const ProductRouter = require("./Routes/ProductRoutes.js");
 const CategoryRouter = require("./Routes/CategoryRoutes.js");
 const CartRouter = require("./Routes/CartProductRoutes.js");
 const Product = require("./Models/ProductModel.js");
-const AuthRouter = require("./Routes/auth.js");
-const OrderRouter = require("./Routes/orderRoutes.js");
+const AuthRouter = require("./Routes/AuthRoutes.js");
+const OrderRouter = require("./Routes/OrderRoutes.js");
 const UserRouter = require("./Routes/UserRoute.js");
 const authMiddleware = require("./middleware/auth.middleware.js");
 
@@ -27,20 +25,20 @@ const allowedOrigins = [
   "https://e-commerce-ten-ebon-93.vercel.app",
 ];
 
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
-app.use(cors())
+// app.use(cors())
 
 connectDatabase();
 
@@ -56,13 +54,11 @@ app.use("/api/cart", CartRouter);
 app.post("/api/contact", async (req, res) => {
   const { firstName, lastName, subject, message, email } = req.body;
 
-  // Validate input
   if (!firstName || !lastName || !subject || !message || !email) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
   try {
-    // Save to DB
     const newContact = new Contact({
       firstName,
       lastName,
@@ -72,7 +68,6 @@ app.post("/api/contact", async (req, res) => {
     });
     await newContact.save();
 
-    // Prepare Email
     const from = email;
     const Subject = `New Contact Form Submission: ${subject}`;
 
@@ -109,7 +104,6 @@ app.post("/api/contact", async (req, res) => {
 
 app.put("/api/updateProductCategory", async (req, res) => {
   const { categoryId, categoryName } = req.body;
-  console.log(req.body);
 
   if (!categoryId || !categoryName) {
     return res

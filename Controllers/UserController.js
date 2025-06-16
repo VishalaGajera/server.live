@@ -1,6 +1,6 @@
 const path = require("path");
 const mongoose = require("mongoose");
-const User = require("../Models/auth");
+const User = require("../Models/AuthModel");
 
 exports.getProfile = async (req, res) => {
   try {
