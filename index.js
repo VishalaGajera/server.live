@@ -12,7 +12,7 @@ const CategoryRouter = require("./Routes/CategoryRoutes.js");
 const CartRouter = require("./Routes/CartProductRoutes.js");
 const Product = require("./Models/ProductModel.js");
 const AuthRouter = require("./Routes/AuthRoutes.js");
-const OrderRouter = require("./Routes/OrderRoutes.js");
+const OrderRouter = require("./Routes/orderRoutes.js");
 const UserRouter = require("./Routes/UserRoute.js");
 const authMiddleware = require("./middleware/auth.middleware.js");
 
