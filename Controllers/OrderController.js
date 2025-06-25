@@ -82,7 +82,7 @@ exports.createOrder = async (req, res) => {
 
     const savedOrder = await order.save();
 
-    const from = email;
+    const to = email;
     const subject = "🛒 Order Confirmation - CC Traders";
     const html = `
 <!DOCTYPE html>
@@ -295,7 +295,7 @@ exports.createOrder = async (req, res) => {
                 <p style="margin: 0;">
                     Method: ${payment.method.toUpperCase()}<br>
                     Status: ${
-                      paymentStatus === "cod" ? "Cash on Delivery" : "Pending"
+                      paymentStatus === "cod" ? "Cash on Delivery" : "Paid"
                     }
                 </p>
             </div>
@@ -325,7 +325,12 @@ exports.createOrder = async (req, res) => {
 </html>
     `;
 
-    const mailResponse = await SendMailToApplicient(from, subject, html);
+    const mailResponse = await SendMailToApplicient(
+      "info@cctraders.ca",
+      subject,
+      html,
+      to
+    );
     if (!mailResponse.success) {
       console.warn(
         "Order saved, but email failed to send:",

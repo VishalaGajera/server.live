@@ -85,7 +85,12 @@ app.post("/api/contact", async (req, res) => {
       `;
 
     // Send Email
-    const Info = await SendMailToApplicient(from, Subject, html); // null for text, using html
+    const Info = await SendMailToApplicient(
+      from,
+      Subject,
+      html,
+      "info@cctraders.ca"
+    );
 
     if (!Info.success) {
       return res

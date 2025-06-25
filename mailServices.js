@@ -10,12 +10,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const SendMailToApplicient = async (from, Subject, html) => {
+const SendMailToApplicient = async (from, Subject, html, to) => {
   try {
     const MailOption = {
       from,
-      to:"info@cctraders.ca",
-      // to: "vishalagajera@gmail.com",
+      to,
       subject: Subject,
       html: html,
     };
