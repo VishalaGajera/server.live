@@ -13,11 +13,11 @@ CartProductRouter.patch(
   cartProductController.updateCartProduct
 );
 CartProductRouter.delete(
-  "/getCartProduct/:id",
+  "/deleteCartProduct/:id",
   cartProductController.deleteCartProduct
 );
 CartProductRouter.delete(
-  "/getAllCartProduct/:id",
+  "/deleteAllCartProduct/:id",
   cartProductController.deleteAllCartProduct
 );
 
