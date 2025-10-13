@@ -3,17 +3,15 @@ const { Resend } = require("resend");
 
 const username = process.env.GMAIL_USERNAME;
 const password = process.env.GMAIL_PASSWORD;
-const resend = new Resend(process.env.RESEND_API_KEY);
-s;
+const resedApiKey=process.env.RESEND_API_KEY;
+const resend = new Resend(resedApiKey);
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: username,
     pass: password,
   },
-  connectionTimeout: 2 * 60 * 1000,
-  secure: false,
-  connection: true,
 });
 
 const SendMailToApplicient = async (from, Subject, html, to) => {
