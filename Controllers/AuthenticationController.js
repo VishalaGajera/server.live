@@ -29,11 +29,14 @@ exports.signup = async (req, res) => {
   try {
     const { firstname, lastname, email, password } = req.body;
 
+    console.log("req.body :", req.body);
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    console.log("existingUser :", existingUser);
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate OTP and set expiration (5 minutes)
@@ -50,9 +53,11 @@ exports.signup = async (req, res) => {
       status: "unverified",
     });
 
+    console.log("user :", user);
     // Send OTP via email
     const emailTemplate = createOTPEmailTemplate(otp, firstname);
 
+    console.log("emailTemplate :", emailTemplate);
     const emailResult = await SendMailToApplicient(
       process.env.GMAIL_USERNAME,
       "Email Verification - OTP",
@@ -64,12 +69,14 @@ exports.signup = async (req, res) => {
 
     if (!emailResult.success) {
       // If email fails, delete the user
+      console.log("Failed to send verification email");
       await User.findByIdAndDelete(user._id);
       return res
         .status(500)
         .json({ message: "Failed to send verification email" });
     }
-
+    
+    console.log("User registered successfully. Please check your email for OTP verification");
     res.status(201).json({
       message:
         "User registered successfully. Please check your email for OTP verification.",
@@ -173,7 +180,7 @@ exports.login = async (req, res) => {
       const otpExpiration = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
       user.otp = otp;
-      
+
       user.otpExpiration = otpExpiration;
       user.otpAttempts = 0;
       await user.save();
@@ -190,8 +197,7 @@ exports.login = async (req, res) => {
       console.log("emailResult:", emailResult);
 
       return res.status(200).json({
-        message:
-          "Please verify your email. OTP has been sent.",
+        message: "Please verify your email. OTP has been sent.",
       });
     }
 

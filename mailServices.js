@@ -18,10 +18,12 @@ const SendMailToApplicient = async (from, Subject, html, to) => {
       subject: Subject,
       html: html,
     };
+    console.log('MailOption :', MailOption)
     const info = await transporter.sendMail(MailOption);
+    console.log('info :', info)
     return { success: true, message: "Email sent successfully" };
   } catch (error) {
-    console.error(error);
+    console.log(`error in sending email: ${error}`);
     return { success: false, message: "Error sending email" };
   }
 };
