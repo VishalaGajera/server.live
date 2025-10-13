@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
 const username = process.env.GMAIL_USERNAME;
 const password = process.env.GMAIL_PASSWORD;
