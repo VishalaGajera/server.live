@@ -2,12 +2,18 @@ const nodemailer = require("nodemailer");
 
 const username = process.env.GMAIL_USERNAME;
 const password = process.env.GMAIL_PASSWORD;
+console.log("process.env :", process.env);
+console.log("process.env.GMAIL_USERNAME:", process.env.GMAIL_USERNAME);
+console.log("process.env.GMAIL_PASSWORD :", process.env.GMAIL_PASSWORD);
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: username,
     pass: password,
   },
+  connectionTimeout: 2 * 60 * 1000,
+  secure: false,
+  connection: true,
 });
 
 const SendMailToApplicient = async (from, Subject, html, to) => {
@@ -18,9 +24,9 @@ const SendMailToApplicient = async (from, Subject, html, to) => {
       subject: Subject,
       html: html,
     };
-    console.log('MailOption :', MailOption)
+    console.log("MailOption :", MailOption);
     const info = await transporter.sendMail(MailOption);
-    console.log('info :', info)
+    console.log("info :", info);
     return { success: true, message: "Email sent successfully" };
   } catch (error) {
     console.log(`error in sending email: ${error}`);
