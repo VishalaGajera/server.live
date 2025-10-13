@@ -2,9 +2,8 @@ const nodemailer = require("nodemailer");
 
 const username = process.env.GMAIL_USERNAME;
 const password = process.env.GMAIL_PASSWORD;
-console.log("process.env :", process.env);
-console.log("process.env.GMAIL_USERNAME:", process.env.GMAIL_USERNAME);
-console.log("process.env.GMAIL_PASSWORD :", process.env.GMAIL_PASSWORD);
+const resend = new Resend(process.env.RESEND_API_KEY);
+s;
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -25,7 +24,8 @@ const SendMailToApplicient = async (from, Subject, html, to) => {
       html: html,
     };
     console.log("MailOption :", MailOption);
-    const info = await transporter.sendMail(MailOption);
+    // const info = await transporter.sendMail(MailOption);
+    const info = await resend.emails.send(MailOption);
     console.log("info :", info);
     return { success: true, message: "Email sent successfully" };
   } catch (error) {
