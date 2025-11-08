@@ -1,30 +1,54 @@
-const nodemailer = require("nodemailer");
-
-const username = process.env.GMAIL_USERNAME;
-const password = process.env.GMAIL_PASSWORD;
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  port: 465,
-  secure: true,
-  auth: {
-    user: username,
-    pass: password,
-  },
-});
-
-const SendMailToApplicient = async (from, Subject, html, to) => {
+const SendMailToApplicient = async (
+  template_id,
+  from,
+  to,
+  subject,
+  name,
+  otp,
+  message,
+  submitted_date
+) => {
   try {
-    const MailOption = {
-      from,
-      to,
-      subject: Subject,
-      html: html,
+    const serviceId = process.env.EMAILJS_SERVICE_ID;
+    const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+
+    const payload = {
+      service_id: serviceId,
+      template_id: template_id,
+      user_id: publicKey,
+      accessToken: privateKey,
+      template_params: {
+        from_email: from,
+        to_email: to,
+        subject,
+        name,
+        otp,
+        message,
+        submitted_date,
+      },
     };
-    const info = await transporter.sendMail(MailOption);
-    console.log("info :", info);
-    return { success: true, message: "Email sent successfully" };
+
+    const response = await fetch(
+      "https://api.emailjs.com/api/v1.0/email/send",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (response.ok) {
+      return { success: true, message: "Email sent successfully" };
+    } else {
+      const errorText = await response.text();
+      console.error("EmailJS error:", errorText);
+      return { success: false, message: "Error sending email" };
+    }
   } catch (error) {
-    console.error(error);
+    console.error("Error sending email:", error);
     return { success: false, message: "Error sending email" };
   }
 };

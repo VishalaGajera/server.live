@@ -69,27 +69,20 @@ app.post("/api/contact", async (req, res) => {
     await newContact.save();
 
     const from = email;
-    const Subject = `New Contact Form Submission: ${subject}`;
-
-    const html = `
-        <h2>📩 New Contact Form Submission</h2>
-        <p><strong>Full Name:</strong> ${firstName} ${lastName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p style="background: #f9f9f9; padding: 10px; border-left: 4px solid #ccc;">
-          ${message}
-        </p>
-        <hr>
-        <p style="font-size: 0.9em; color: #777;">Submitted on: ${new Date().toLocaleString()}</p>
-      `;
+    const Subject = `${subject}`;
 
     // Send Email
+    const name = `${firstName} ${lastName}`;
+    const submitted_date = new Date().toLocaleString();
     const Info = await SendMailToApplicient(
+      "template_wvg4ysr",
       from,
+      "info@cctraders.ca",
       Subject,
-      html,
-      "info@cctraders.ca"
+      name,
+      "",
+      message,
+      submitted_date
     );
 
     if (!Info.success) {

@@ -12,7 +12,6 @@ const authMiddleware = async (req, res, next) => {
     req.user = await User.findById(decoded.userId).select("-password"); 
     next();
   } catch (err) {
-    console.log(err);
     res.status(401).json({ message: "Unauthorized access. Please log in to continue." });
   }
 };

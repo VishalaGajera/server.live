@@ -29,14 +29,10 @@ exports.signup = async (req, res) => {
   try {
     const { firstname, lastname, email, password } = req.body;
 
-    console.log("req.body :", req.body);
-
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-
-    console.log("existingUser :", existingUser);
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate OTP and set expiration (5 minutes)
@@ -53,30 +49,25 @@ exports.signup = async (req, res) => {
       status: "unverified",
     });
 
-    console.log("user :", user);
     // Send OTP via email
-    const emailTemplate = createOTPEmailTemplate(otp, firstname);
-
-    console.log("emailTemplate :", emailTemplate);
+    const name = `${firstname} ${lastname}`;
     const emailResult = await SendMailToApplicient(
-      process.env.GMAIL_USERNAME,
+      "template_ihqnim6",
+      "info@cctraders.ca",
+      email,
       "Email Verification - OTP",
-      emailTemplate,
-      email
+      name,
+      otp
     );
-
-    console.log("emailResult:", emailResult);
 
     if (!emailResult.success) {
       // If email fails, delete the user
-      console.log("Failed to send verification email");
       await User.findByIdAndDelete(user._id);
       return res
         .status(500)
         .json({ message: "Failed to send verification email" });
     }
-    
-    console.log("User registered successfully. Please check your email for OTP verification");
+
     res.status(201).json({
       message:
         "User registered successfully. Please check your email for OTP verification.",
@@ -146,14 +137,27 @@ exports.resendOTP = async (req, res) => {
     user.otpAttempts = 0;
     await user.save();
 
-    // Send new OTP via email
-    const emailTemplate = createOTPEmailTemplate(otp, user.firstname);
-    await SendMailToApplicient(
-      process.env.GMAIL_USERNAME,
-      "Email Verification - New OTP",
-      emailTemplate,
-      email
+    const name = `${user.firstname} ${user.lastname}`;
+    const emailResult = await SendMailToApplicient(
+      "template_ihqnim6",
+      "info@cctraders.ca",
+      email,
+      "Email Verification - OTP",
+      name,
+      otp
     );
+
+    // Send new OTP via email
+
+    if (!emailResult.success) {
+      // If email fails, delete the user
+      await User.findByIdAndDelete(user._id);
+      return res
+        .status(500)
+        .json({
+          message: "Failed to send verification email. Please try again later",
+        });
+    }
 
     res.status(200).json({ message: "New OTP sent successfully" });
   } catch (error) {
@@ -185,16 +189,28 @@ exports.login = async (req, res) => {
       user.otpAttempts = 0;
       await user.save();
 
-      const emailTemplate = createOTPEmailTemplate(otp, user.firstname);
-
+      const name = `${user.firstname} ${user.lastname}`;
       const emailResult = await SendMailToApplicient(
-        process.env.GMAIL_USERNAME,
+        "template_ihqnim6",
+        "info@cctraders.ca",
+        email,
         "Email Verification - OTP",
-        emailTemplate,
-        email
+        name,
+        otp
       );
 
-      console.log("emailResult:", emailResult);
+      // Send new OTP via email
+
+      if (!emailResult.success) {
+        // If email fails, delete the user
+        await User.findByIdAndDelete(user._id);
+        return res
+          .status(500)
+          .json({
+            message:
+              "We couldn't send your verification email due to a temporary issue. Please try again after a few minutes.",
+          });
+      }
 
       return res.status(200).json({
         message: "Please verify your email. OTP has been sent.",
