@@ -82,260 +82,290 @@ exports.createOrder = async (req, res) => {
 
     const savedOrder = await order.save();
 
-    const to = email;
+    const to_email = email;
     const subject = "🛒 Order Confirmation - CC Traders";
-    const html = `
-<!DOCTYPE html>
+
+    const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .email-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        .order-id {
-            background-color: #e8f5e8;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-            margin: 20px 0;
-            border-left: 4px solid #27ae60;
-        }
-        .section {
-            margin: 25px 0;
-        }
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 5px;
-        }
-        .item-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        .item-table th,
-        .item-table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        .item-table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-        .total-section {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 8px 0;
-        }
-        .total-final {
-            font-weight: bold;
-            font-size: 18px;
-            color: #27ae60;
-            border-top: 2px solid #27ae60;
-            padding-top: 10px;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .info-box {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #3498db;
-        }
-        .info-box h4 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            color: #666;
-            font-size: 14px;
-        }
-        .contact-info {
-            background-color: #e3f2fd;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        @media (max-width: 600px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            .email-container {
-                padding: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmation - CC Trader</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f2f5f9;
+      margin: 0;
+      padding: 25px;
+      color: #333;
+    }
+
+    .email-wrapper {
+      max-width: 650px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .header {
+      background: linear-gradient(90deg, #0078d7, #00a2ff);
+      padding: 25px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: 0.5px;
+    }
+
+    .header p {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-top: 6px;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #1e3a8a;
+      font-size: 22px;
+    }
+
+    .order-box {
+      background: #f0faff;
+      border-left: 4px solid #0078d7;
+      padding: 18px;
+      border-radius: 8px;
+      margin: 25px 0;
+    }
+
+    .order-box strong {
+      font-size: 18px;
+      color: #0078d7;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th {
+      background: #eef3f8;
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #e2e8f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      font-size: 14px;
+    }
+
+    .total-section {
+      margin-top: 30px;
+      background: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 15px;
+    }
+
+    .total-final {
+      border-top: 2px solid #0078d7;
+      margin-top: 10px;
+      padding-top: 10px;
+      font-weight: bold;
+      color: #0078d7;
+      font-size: 18px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .info-box {
+      background: #f7fafe;
+      padding: 16px;
+      border-left: 4px solid #0078d7;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .info-box h4 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #1e3a8a;
+    }
+
+    .contact-section {
+      background: #eaf4ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 25px 20px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .content {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="email-container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo">CC Traders</div>
-            <p style="margin: 0; color: #666;">Your Order Has Been Confirmed! 🎉</p>
-        </div>
 
-        <!-- Greeting -->
-        <div class="section">
-            <h2 style="color: #2c3e50; margin-bottom: 10px;">Hello ${firstName} ${lastName},</h2>
-            <p>Thank you for your order! We're excited to get your items to you as soon as possible.</p>
-        </div>
+  <div class="email-wrapper">
 
-        <!-- Order ID -->
-        <div class="order-id">
-            <strong>Order ID: ${orderId}</strong>
-            <br>
-            <small>Please save this order ID for your records</small>
-        </div>
-
-        <!-- Order Details -->
-        <div class="section">
-            <h3 class="section-title">📦 Order Summary</h3>
-            <table class="item-table">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Size</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${items
-                      .map(
-                        (item) => `
-                        <tr>
-                            <td>${item.name}</td>
-                            <td>${item.size}</td>
-                            <td>${item.quantity}</td>
-                            <td>₹${item.price}</td>
-                            <td>₹${(item.price * item.quantity).toFixed(2)}</td>
-                        </tr>
-                    `
-                      )
-                      .join("")}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pricing Breakdown -->
-        <div class="total-section">
-            <h3 class="section-title">💰 Pricing Breakdown</h3>
-            <div class="total-row">
-                <span>Subtotal:</span>
-                <span>₹${subtotal}</span>
-            </div>
-            <div class="total-row">
-                <span>Shipping (${shippingMethod}):</span>
-                <span>₹${shippingCost}</span>
-            </div>
-            <div class="total-row total-final">
-                <span>Total Amount:</span>
-                <span>₹${total}</span>
-            </div>
-        </div>
-
-        <!-- Shipping & Payment Info -->
-        <div class="info-grid">
-            <div class="info-box">
-                <h4>🚚 Shipping Address</h4>
-                <p style="margin: 0;">
-                    ${firstName} ${lastName}<br>
-                    ${street}<br>
-                    ${district}, ${city}
-                </p>
-            </div>
-            <div class="info-box">
-                <h4>💳 Payment Information</h4>
-                <p style="margin: 0;">
-                    Method: ${payment.method.toUpperCase()}<br>
-                    Status: ${
-                      paymentStatus === "cod" ? "Cash on Delivery" : "Paid"
-                    }
-                </p>
-            </div>
-        </div>
-
-        <!-- Contact Information -->
-        <div class="contact-info">
-            <h4 style="margin: 0 0 10px 0;">📞 Need Help?</h4>
-            <p style="margin: 0;">
-                If you have any questions about your order, please contact us:<br>
-                <strong>Email:</strong> info@cctraders.ca<br>
-                <strong>Phone:</strong> +1 (437) 606-3251<br>
-                <strong>Website:</strong> www.cctraders.ca
-            </p>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>Thank you for choosing CC Traders! 🙏</p>
-            <p style="font-size: 12px; color: #999;">
-                This is an automated email from CC Traders. Please do not reply to this email.<br>
-                If you need assistance, please contact our support team.
-            </p>
-        </div>
+    <!-- HEADER -->
+    <div class="header">
+      <h1>CC Trader</h1>
+      <p>Your order has been successfully confirmed 🎉</p>
     </div>
+
+    <!-- BODY CONTENT -->
+    <div class="content">
+
+      <h2>Hello ${firstName} ${lastName},</h2>
+      <p>Thank you for shopping with <strong>CC Trader</strong>!  
+         We're preparing your order and will notify you once it ships.</p>
+
+      <!-- ORDER ID BOX -->
+      <div class="order-box">
+        <strong>Order ID: ${orderId}</strong><br />
+        <small>Keep this ID for future reference.</small>
+      </div>
+
+      <!-- ORDER SUMMARY TABLE -->
+      <h3 style="margin-top: 25px; color:#1e3a8a;">📦 Order Summary</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Size</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items
+            .map(
+              (item) => `
+            <tr>
+              <td>${item.name}</td>
+              <td>${item.size}</td>
+              <td>${item.quantity}</td>
+              <td>₹${item.price}</td>
+              <td>₹${(item.price * item.quantity).toFixed(2)}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+
+      <!-- PRICING BREAKDOWN -->
+      <div class="total-section">
+        <div class="total-row"><span>Subtotal:</span><span>₹${subtotal}</span></div>
+        <div class="total-row"><span>Shipping (${shippingMethod}):</span><span>₹${shippingCost}</span></div>
+        
+        <div class="total-row total-final">
+          <span>Total Amount:</span><span>₹${total}</span>
+        </div>
+      </div>
+
+      <!-- ADDRESS + PAYMENT GRID -->
+      <div class="info-grid">
+        <div class="info-box">
+          <h4>🚚 Shipping Address</h4>
+          <p>
+            ${firstName} ${lastName}<br />
+            ${street}<br />
+            ${district}, ${city}
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h4>💳 Payment Details</h4>
+          <p>
+            Method: ${payment.method.toUpperCase()}<br />
+            Status: ${paymentStatus === "cod" ? "Cash on Delivery" : "Paid"}
+          </p>
+        </div>
+      </div>
+
+      <!-- CONTACT SECTION -->
+      <div class="contact-section">
+        <h4>Need Help?</h4>
+        <p style="margin:0;">
+          📧 Email: info@cctraders.ca<br />
+          📞 Phone: +1 (437) 606-3251<br />
+          🌐 Website: www.cctraders.ca
+        </p>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      Thank you for choosing CC Trader! 🙏 <br />
+      <span style="font-size: 12px; display:block; margin-top:8px; color:#999;">
+        This is an automated email. Please do not reply.
+      </span>
+    </div>
+
+  </div>
+
 </body>
 </html>
-    `;
+`;
 
-    const mailResponse = await SendMailToApplicient(
+    const emailResult = await SendMailToApplicient(
       "info@cctraders.ca",
+      to_email,
       subject,
-      html,
-      to
+      htmlContent
     );
-    if (!mailResponse.success) {
-      console.warn(
-        "Order saved, but email failed to send:",
-        mailResponse.message
-      );
+
+    if (!emailResult.success) {
+      return res
+        .status(500)
+        .json({
+          message:
+            "Your order was placed, but we were unable to send the confirmation email. Please check again later",
+        });
     }
 
     return res.status(201).json({

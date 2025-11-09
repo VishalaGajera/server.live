@@ -74,21 +74,91 @@ app.post("/api/contact", async (req, res) => {
     // Send Email
     const name = `${firstName} ${lastName}`;
     const submitted_date = new Date().toLocaleString();
+    const htmlContact = `<div style="
+  max-width: 600px;
+  margin: auto;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+">
+  <div style="
+    background: linear-gradient(90deg, #0078d7, #00a0ff);
+    color: #fff;
+    padding: 18px 25px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  ">
+    <h2 style="margin: 0; font-size: 20px;">📩 New Contact Form Submission</h2>
+  </div>
+
+  <div style="padding: 25px;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <td style="padding: 8px 0; width: 150px; font-weight: 600;">Full Name:</td>
+        <td style="padding: 8px 0;">${name}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; font-weight: 600;">Email:</td>
+        <td style="padding: 8px 0;">${from}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; font-weight: 600;">Subject:</td>
+        <td style="padding: 8px 0;">${subject}</td>
+      </tr>
+    </table>
+
+    <div style="margin-top: 20px;">
+      <p style="font-weight: 600; margin-bottom: 8px;">Message:</p>
+      <div style="
+        background: #f5f8fa;
+        padding: 15px;
+        border-left: 4px solid #0078d7;
+        border-radius: 5px;
+      ">
+        ${message}
+      </div>
+    </div>
+
+    <hr style="margin: 25px 0; border: none; border-top: 1px solid #eee;">
+
+    <p style="font-size: 0.9em; color: #888;">
+      🕒 Submitted on: <strong>${submitted_date}</strong>
+    </p>
+  </div>
+
+  <div style="
+    background: #f9f9f9;
+    text-align: center;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    font-size: 0.85em;
+    color: #777;
+  ">
+    <p style="margin: 0;">This inquiry was submitted through the official contact form on <a href="https://cctraders.ca/" style="color: #0078d7; text-decoration: none;">cctrander.ca</a>.</p>
+
+  </div>
+</div>
+`;
     const Info = await SendMailToApplicient(
-      "template_wvg4ysr",
       from,
       "info@cctraders.ca",
-      Subject,
-      name,
-      "",
-      message,
-      submitted_date
+      "New Customer Inquiry from cctrader.ca",
+      htmlContact,
+      name
     );
 
     if (!Info.success) {
       return res
         .status(500)
-        .json({ error: Info.message || "Failed to send email" });
+        .json({
+          message:
+            "We couldn't send your inquiry at the moment. Please try again later.",
+        });
     }
 
     return res

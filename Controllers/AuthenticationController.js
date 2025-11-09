@@ -9,19 +9,92 @@ const generateOTP = () => {
 };
 
 // Create OTP email template
-const createOTPEmailTemplate = (otp, firstname) => {
+const createOTPEmailTemplate = (otp, name) => {
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #333;">Email Verification</h2>
-      <p>Dear ${firstname},</p>
-      <p>Thank you for registering! Please use the following OTP to verify your email address:</p>
-      <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
-        <h1 style="color: #333; font-size: 32px; letter-spacing: 5px;">${otp}</h1>
-      </div>
-      <p><strong>This OTP will expire in 5 minutes.</strong></p>
-      <p>If you didn't request this verification, please ignore this email.</p>
-      <p>Best regards,<br>Your E-Commerce Team</p>
+    <div style="
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #333;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+">
+  <!-- Header -->
+  <div style="
+    background: linear-gradient(90deg, #0078d7, #00a0ff);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  ">
+    <h2 style="margin: 0; font-size: 22px; letter-spacing: 0.5px;">
+      🔒 Email Verification Required
+    </h2>
+  </div>
+
+  <!-- Body -->
+  <div style="padding: 25px;">
+    <p style="font-size: 16px;">Dear <strong>${name}</strong>,</p>
+
+    <p style="font-size: 15px; line-height: 1.6;">
+      Thank you for registering with 
+      <a href="https://cctraders.ca/" style="color: #0078d7; text-decoration: none; font-weight: 600;">cctrander.ca</a>!  
+      To complete your registration, please use the one-time password (OTP) below to verify your email address:
+    </p>
+
+    <!-- OTP Box -->
+    <div style="
+      background-color: #f7faff;
+      padding: 25px;
+      text-align: center;
+      border-radius: 8px;
+      margin: 25px 0;
+      border-left: 5px solid #0078d7;
+    ">
+      <h1 style="
+        color: #0078d7;
+        font-size: 36px;
+        letter-spacing: 8px;
+        margin: 0;
+      ">${otp}</h1>
     </div>
+
+    <p style="font-size: 15px; color: #333;">
+      <strong>This OTP will expire in 5 minutes.</strong>
+    </p>
+
+    <p style="font-size: 14px; color: #666; line-height: 1.6;">
+      If you didn’t request this verification, please ignore this email.  
+      Your account will remain unverified until confirmed.
+    </p>
+
+    <p style="font-size: 15px; margin-top: 25px;">
+      Best regards,<br>
+      <strong>The cctraders.ca Team</strong>
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <div style="
+    background: #f9f9f9;
+    text-align: center;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    font-size: 13px;
+    color: #777;
+  ">
+    <p style="margin: 0;">
+      This email was sent by 
+      <a href="https://cctraders.ca/" style="color: #0078d7; text-decoration: none;">cctrander.ca</a> 
+      to verify your email address.
+    </p>
+  </div>
+</div>
   `;
 };
 
@@ -51,13 +124,13 @@ exports.signup = async (req, res) => {
 
     // Send OTP via email
     const name = `${firstname} ${lastname}`;
+    const htmlContent = createOTPEmailTemplate(otp, name);
     const emailResult = await SendMailToApplicient(
-      "template_ihqnim6",
       "info@cctraders.ca",
       email,
       "Email Verification - OTP",
-      name,
-      otp
+      htmlContent,
+      name
     );
 
     if (!emailResult.success) {
@@ -138,13 +211,14 @@ exports.resendOTP = async (req, res) => {
     await user.save();
 
     const name = `${user.firstname} ${user.lastname}`;
+
+    const htmlContent = createOTPEmailTemplate(otp, name);
     const emailResult = await SendMailToApplicient(
-      "template_ihqnim6",
       "info@cctraders.ca",
       email,
       "Email Verification - OTP",
-      name,
-      otp
+      htmlContent,
+      name
     );
 
     // Send new OTP via email
@@ -152,11 +226,9 @@ exports.resendOTP = async (req, res) => {
     if (!emailResult.success) {
       // If email fails, delete the user
       await User.findByIdAndDelete(user._id);
-      return res
-        .status(500)
-        .json({
-          message: "Failed to send verification email. Please try again later",
-        });
+      return res.status(500).json({
+        message: "Failed to send verification email. Please try again later",
+      });
     }
 
     res.status(200).json({ message: "New OTP sent successfully" });
@@ -190,13 +262,13 @@ exports.login = async (req, res) => {
       await user.save();
 
       const name = `${user.firstname} ${user.lastname}`;
+      const htmlContent = createOTPEmailTemplate(otp, name);
       const emailResult = await SendMailToApplicient(
-        "template_ihqnim6",
         "info@cctraders.ca",
         email,
         "Email Verification - OTP",
-        name,
-        otp
+        htmlContent,
+        name
       );
 
       // Send new OTP via email
@@ -204,12 +276,10 @@ exports.login = async (req, res) => {
       if (!emailResult.success) {
         // If email fails, delete the user
         await User.findByIdAndDelete(user._id);
-        return res
-          .status(500)
-          .json({
-            message:
-              "We couldn't send your verification email due to a temporary issue. Please try again after a few minutes.",
-          });
+        return res.status(500).json({
+          message:
+            "We couldn't send your verification email due to a temporary issue. Please try again after a few minutes.",
+        });
       }
 
       return res.status(200).json({

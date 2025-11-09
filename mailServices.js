@@ -1,31 +1,27 @@
 const SendMailToApplicient = async (
-  template_id,
   from,
   to,
   subject,
-  name,
-  otp,
-  message,
-  submitted_date
+  content,
+  name
 ) => {
   try {
     const serviceId = process.env.EMAILJS_SERVICE_ID;
+    const templateId = process.env.EMAILJS_TEMPLATE_ID;
     const privateKey = process.env.EMAILJS_PRIVATE_KEY;
     const publicKey = process.env.EMAILJS_PUBLIC_KEY;
 
     const payload = {
       service_id: serviceId,
-      template_id: template_id,
+      template_id: templateId,
       user_id: publicKey,
       accessToken: privateKey,
       template_params: {
+        htmlContent: content,
         from_email: from,
         to_email: to,
         subject,
-        name,
-        otp,
-        message,
-        submitted_date,
+        name
       },
     };
 
